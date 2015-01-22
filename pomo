@@ -1,5 +1,20 @@
 #!/usr/bin/env ruby
 
+def interval(name, minutes)
+  puts
+  puts "#{name} started"
+  minutes = minutes.to_i
+  while minutes > 0
+    puts "  #{minutes}m left of #{name}"
+    begin
+      sleep 1
+    rescue Interrupt
+      exit 0
+    end
+    minutes -= 1
+  end
+end
+
 config = {
   'work_time' => 25,
   'short_break_time' => 5,
@@ -13,4 +28,14 @@ File.open(pomo_config_path, 'r').each_line do |line|
   config[key] = value.chomp
 end
 
-puts config
+puts "welcome to pomo"
+
+pomodori = config['pomodori'].to_i
+pomodori.times do |time|
+  interval 'work', config['work_time']
+  if time == (pomodori - 1)
+    interval 'long break', config['long_break_time']
+  else
+    interval 'break', config['short_break_time']
+  end
+end
