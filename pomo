@@ -7,7 +7,7 @@ def interval(name, minutes)
   while minutes > 0
     puts "  #{minutes}m left of #{name}"
     begin
-      sleep 1
+      sleep 60
     rescue Interrupt
       exit 0
     end
@@ -19,20 +19,25 @@ config = {
   'work_time' => 25,
   'short_break_time' => 5,
   'long_break_time' => 30,
-  'pomodori' => 4
+  'pomodori' => 4,
+  'event_command' => 'tput bel'
 }
 
 pomo_config_path = File.expand_path('~/.pomoconfig')
-File.open(pomo_config_path, 'r').each_line do |line|
-  key, value = line.split
-  config[key] = value.chomp
+if File.exist? pomo_config_path
+  File.open(pomo_config_path, 'r').each_line do |line|
+    key, value = line.split
+    config[key] = value.chomp
+  end
 end
 
 puts "welcome to pomo"
 
 pomodori = config['pomodori'].to_i
 pomodori.times do |time|
+  system(config['event_command'])
   interval 'work', config['work_time']
+  system(config['event_command'])
   if time == (pomodori - 1)
     interval 'long break', config['long_break_time']
   else
