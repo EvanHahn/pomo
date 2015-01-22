@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+config = {
+  'work_time' => 25,
+  'short_break_time' => 5,
+  'long_break_time' => 30,
+  'pomodori' => 4
+}
+
+pomo_config_path = File.expand_path('~/.pomoconfig')
+File.open(pomo_config_path, 'r').each_line do |line|
+  key, value = line.split
+  config[key] = value.chomp
+end
+
+puts config
